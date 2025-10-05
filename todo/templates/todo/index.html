@@ -1,0 +1,41 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <form method="post" class="d-flex mb-3">
+          {% csrf_token %}
+          <input type="text" name="title" class="form-control me-2" placeholder="Enter new task">
+          <button name="add" class="btn btn-primary">Add</button>
+        </form>
+
+        <ul class="list-group">
+          {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <span class="{% if task.completed %}task-completed{% endif %}">{{ task.title }}</span>
+
+              <div>
+                {% if not task.completed %}
+                  <form method="post" style="display:inline">
+                    {% csrf_token %}
+                    <button name="complete" value="{{ task.id }}" class="btn btn-success btn-sm me-1">✓ Complete</button>
+                  </form>
+                {% endif %}
+
+                <form method="post" style="display:inline">
+                  {% csrf_token %}
+                  <button name="delete" value="{{ task.id }}" class="btn btn-danger btn-sm">🗑 Delete</button>
+                </form>
+              </div>
+            </li>
+          {% empty %}
+            <li class="list-group-item">No tasks yet — add one above.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
